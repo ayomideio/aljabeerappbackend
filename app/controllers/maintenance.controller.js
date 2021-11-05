@@ -3046,12 +3046,12 @@ var mailOptions = {
   ],
   subject: "Maintenace Request---" + count,
   html: a,
-  attachments: [
-    {
-      // filename: 'mainr.txt',
-            path: attatch
-    },
-  ],
+  // attachments: [
+  //   {
+  //     // filename: 'mainr.txt',
+  //           path: attatch
+  //   },
+  // ],
 };
 transporter.sendMail(mailOptions, function (error, response) {
   if (error) {
@@ -3080,6 +3080,7 @@ exports.createmaintenance = (req, res) => {
     return "Ticket -" + text;
 };
   if (req.body.operate === "create") {
+    console.log('i was here'+JSON.stringify(req.body))
     const maintenance = new Maintenance({
       propertyName:req.body.propertyName,
       email: req.body.email,
@@ -3112,7 +3113,7 @@ exports.createmaintenance = (req, res) => {
     });
   }
   if (req.body.sendmail === "yes") {
-    let attatch=''+req.body.attachment
+    let attatch=''
     console.log(`anexooooo ${attatch}`)
     let clientphone='-'
     let propertyid='001'
@@ -3126,7 +3127,7 @@ exports.createmaintenance = (req, res) => {
       attatch,
       req.body.count,
       req.body.username,
-      req.body.ticketnumber,
+      req.body.count,
       clientphone,
     
       req.body.propertyName,
@@ -3135,6 +3136,15 @@ exports.createmaintenance = (req, res) => {
       
 
     );
+    Maintenance.find()
+    .then((maintenances) => {
+      res.send(maintenances);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occured",
+      });
+    });
   }
 
   if (req.body.operate === "edit") {
